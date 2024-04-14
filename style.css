@@ -1,0 +1,80 @@
+#gamefield {
+	border: 1px solid black;
+	width: fit-content;
+	display: grid;
+}
+
+#background {
+	grid-area: 1/1;
+	width: calc(16 * 32px);
+	height: calc(12 * 32px);
+}
+
+#items {
+	grid-area: 1/1;
+}
+
+#characters {
+	grid-area: 1/1;
+}
+
+#player {
+	width: 42px;
+	aspect-ratio: 16/20;
+	background-size: 400% 400%;
+	background-image: url("Characters/Character 1.png");
+	image-rendering: pixelated;
+}
+
+#player.animate {
+	animation-duration: 0.7s;
+	animation-iteration-count: infinite;
+	animation-timing-function: steps(4);
+}
+#player.down {
+	animation-name: down;
+}
+#player.up {
+	animation-name: up;
+}
+#player.left {
+	animation-name: left;
+}
+#player.right {
+	animation-name: right;
+}
+@keyframes down {
+	from {
+		background-position: 0% 0%;
+	}
+	to {
+		background-position: -400% 0%;
+	}
+}
+
+@keyframes up {
+	from {
+		background-position: 0% -100%;
+	}
+	to {
+		background-position: -400% -100%;
+	}
+}
+
+@keyframes left {
+	from {
+		background-position: 0% -200%;
+	}
+	to {
+		background-position: -400% -200%;
+	}
+}
+
+@keyframes right {
+	from {
+		background-position: 0% -300%;
+	}
+	to {
+		background-position: -400% -300%;
+	}
+}
