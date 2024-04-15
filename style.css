@@ -10,7 +10,7 @@
 	grid-template-columns: repeat(var(--GRID_COLS), max-content);
 }
 
-#background .tile{
+#background .tile {
 	width: var(--TILE_SIZE);
 	aspect-ratio: 1/1;
 	background-repeat: no-repeat;
@@ -18,21 +18,41 @@
 	image-rendering: pixelated;
 }
 
-.path{
-	background-image: url("images/tiles/path.png");
-}
-
 .grass {
 	background-image: url("images/tiles/grass.png");
 }
 
-.stone {
+.path {
+	background-image: url("images/tiles/path.png");
+}
+
+.cliff {
+	background-image: url("images/tiles/cliff.png");
+}
+
+.water {
+	background-image: url("images/tiles/water.png");
+}
+
+.mine {
+	background-image: url("images/tiles/mine.png");
+}
+.floor_wood {
+	background-image: url("images/tiles/floor_wood.png");
+}
+
+.floor_stone {
 	background-image: url("images/tiles/floor_stone.png");
 }
 
-.water{
-	background-image: url("images/tiles/water.png");
+.lava {
+	background-image: url("images/tiles/lava.png");
 }
+
+.wall {
+	background-image: url("images/tiles/wall.png");
+}
+
 #items {
 	grid-area: 1/1;
 }
@@ -102,21 +122,29 @@
 	}
 }
 
-
-.highlight{
+.highlight {
 	outline: 2px dashed yellow;
 	transform: translateZ(1px);
 }
 
-.showRect{
+.showRect {
 	outline: 1px solid red;
 }
 
-.showReg::before{
+.showReg::before {
 	content: "";
 	position: absolute;
 	background-color: cyan;
 	width: 1px;
 	height: 1px;
 	translate: var(--regX) var(--regY);
+}
+
+.showHitbox::after {
+	content: "";
+	position: absolute;
+	outline: 1px dotted rgb(34, 255, 0);
+	width: var(--hitbox_width);
+	height: var(--hitbox_height);
+	translate: var(--hitbox_x) var(--hitbox_y);
 }
