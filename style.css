@@ -16,10 +16,23 @@
 	background-repeat: no-repeat;
 	background-size: 100%;
 	image-rendering: pixelated;
+}
 
+.path{
+	background-image: url("images/tiles/path.png");
+}
+
+.grass {
 	background-image: url("images/tiles/grass.png");
 }
 
+.stone {
+	background-image: url("images/tiles/floor_stone.png");
+}
+
+.water{
+	background-image: url("images/tiles/water.png");
+}
 #items {
 	grid-area: 1/1;
 }
@@ -29,10 +42,10 @@
 }
 
 #player {
-	width: 42px;
+	width: 22px;
 	aspect-ratio: 16/20;
 	background-size: 400% 400%;
-	background-image: url("Characters/Character 5.png");
+	background-image: url("images/Characters/Character 5.png");
 	image-rendering: pixelated;
 }
 
@@ -87,4 +100,23 @@
 	to {
 		background-position: -400% -300%;
 	}
+}
+
+
+.highlight{
+	outline: 2px dashed yellow;
+	transform: translateZ(1px);
+}
+
+.showRect{
+	outline: 1px solid red;
+}
+
+.showReg::before{
+	content: "";
+	position: absolute;
+	background-color: cyan;
+	width: 1px;
+	height: 1px;
+	translate: var(--regX) var(--regY);
 }
