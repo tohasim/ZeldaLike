@@ -9,6 +9,8 @@ function init() {
 	document.addEventListener("keyup", keyUp);
 	displayTiles();
 }
+
+// Controls object to keep track of key states
 const controls = {
 	left: false,
 	right: false,
@@ -16,6 +18,7 @@ const controls = {
 	down: false,
 };
 
+// Event listener for keydown events
 function keyDown(event) {
 	switch (event.key) {
 		case "ArrowLeft": {
@@ -37,6 +40,7 @@ function keyDown(event) {
 	}
 }
 
+// Event listener for keyup events
 function keyUp(event) {
 	switch (event.key) {
 		case "ArrowLeft": {
@@ -59,6 +63,8 @@ function keyUp(event) {
 }
 
 let lastTimestamp = 0;
+
+// Game loop
 function tick(timestamp) {
 	requestAnimationFrame(tick);
 	const deltaTime = (timestamp - lastTimestamp) / 1000;
@@ -72,6 +78,7 @@ function tick(timestamp) {
 
 //#region VIEW
 
+// Create the game view
 function createView() {
 	const background = document.getElementById("background");
 	// Create the grid
@@ -87,6 +94,7 @@ function createView() {
 	background.style.setProperty("--TILE_SIZE", TILE_SIZE + "px");
 }
 
+// Display the tiles on the grid
 function displayTiles() {
 	const visualTiles = document.querySelectorAll("#background .tile");
 
@@ -100,6 +108,7 @@ function displayTiles() {
 	}
 }
 
+// Get the CSS class for a given tile type
 function getClassForTileType(tileType) {
 	switch (tileType) {
 		case 0:
@@ -127,6 +136,7 @@ function getClassForTileType(tileType) {
 
 function updateView() {}
 
+// Display the player at its current position
 function displayPlayerAtPosition() {
 	const visualPlayer = document.getElementById("player");
 	visualPlayer.style.translate = `${player.x - player.regX}px ${
@@ -134,6 +144,7 @@ function displayPlayerAtPosition() {
 	}px`;
 }
 
+// Display the player animation based on its movement
 function displayPlayerAnimation() {
 	const visualPlayer = document.getElementById("player");
 	if (player.moving) {
@@ -147,6 +158,8 @@ function displayPlayerAnimation() {
 //#endregion
 
 //#region MODEL
+
+// Player object
 const player = {
 	x: 168,
 	y: 181,
@@ -198,10 +211,12 @@ const GRID_COLS = tiles[0].length;
 const GRID_ROWS = tiles.length;
 const TILE_SIZE = 32;
 
+// Get the tile type at a given coordinate
 function getTileAtCoordinate({ row, col }) {
 	return tiles[row][col];
 }
 
+// Get the coordinate from a given position
 function coordFromPosition(object) {
 	return {
 		row: Math.floor(object.y / TILE_SIZE),
@@ -209,10 +224,12 @@ function coordFromPosition(object) {
 	};
 }
 
+// Get the position from a given coordinate
 function positionFromCoord({ row, col }) {
 	return { x: col * TILE_SIZE, y: row * TILE_SIZE };
 }
 
+// Move the player based on the controls and deltaTime
 function movePlayer(deltaTime) {
 	player.moving = false;
 
@@ -250,6 +267,7 @@ function movePlayer(deltaTime) {
 	}
 }
 
+// Check if the player can move to a given position
 function canMoveTo({ x, y }) {
 	const { row, col } = coordFromPosition({ x, y });
 	if (row < 0 || row >= GRID_ROWS || col < 0 || col >= GRID_COLS) {
@@ -268,16 +286,20 @@ function canMoveTo({ x, y }) {
 //#endregion
 
 //#region DEBUGGING
+
+// Highlight a tile at a given coordinate
 function highlight({ row, col }) {
 	const visualTiles = document.querySelectorAll("#background .tile");
 	visualTiles[row * GRID_COLS + col].classList.add("highlight");
 }
 
+// Remove highlight from a tile at a given coordinate
 function unhighlight({ row, col }) {
 	const visualTiles = document.querySelectorAll("#background .tile");
 	visualTiles[row * GRID_COLS + col].classList.remove("highlight");
 }
 
+// Show debugging information
 function showDebugging() {
 	showDebuggingTileUnderPlayer();
 	showPlayerRect();
@@ -287,6 +309,7 @@ function showDebugging() {
 
 let lastPlayerCoord = { row: 1, col: 1 };
 
+// Show the player rectangle
 function showPlayerRect() {
 	const player = document.getElementById("player");
 	if (!player.classList.contains("showRect")) {
@@ -294,6 +317,7 @@ function showPlayerRect() {
 	}
 }
 
+// Show the player registration point
 function showPlayerReg() {
 	const visualPlayer = document.getElementById("player");
 	if (!visualPlayer.classList.contains("showReg")) {
@@ -304,6 +328,7 @@ function showPlayerReg() {
 	visualPlayer.style.setProperty("--regY", player.regY + "px");
 }
 
+// Show the player hitbox
 function showPlayerHitbox() {
 	const visualPlayer = document.getElementById("player");
 	if (!visualPlayer.classList.contains("showHitbox")) {
@@ -318,6 +343,7 @@ function showPlayerHitbox() {
 	);
 }
 
+// Show the tile under the player
 function showDebuggingTileUnderPlayer() {
 	const playerCoord = coordFromPosition(player);
 	if (
