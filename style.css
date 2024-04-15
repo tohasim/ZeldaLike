@@ -6,8 +6,18 @@
 
 #background {
 	grid-area: 1/1;
-	width: calc(16 * 32px);
-	height: calc(12 * 32px);
+	display: grid;
+	grid-template-columns: repeat(var(--GRID_COLS), max-content);
+}
+
+#background .tile{
+	width: var(--TILE_SIZE);
+	aspect-ratio: 1/1;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	image-rendering: pixelated;
+
+	background-image: url("images/tiles/grass.png");
 }
 
 #items {
@@ -22,7 +32,7 @@
 	width: 42px;
 	aspect-ratio: 16/20;
 	background-size: 400% 400%;
-	background-image: url("Characters/Character 1.png");
+	background-image: url("Characters/Character 5.png");
 	image-rendering: pixelated;
 }
 
