@@ -2,7 +2,8 @@
 window.addEventListener("load", init);
 
 //#region CONTROLLER
-function init() {
+async function init() {
+	await initModel();
 	createView();
 	requestAnimationFrame(tick);
 	document.addEventListener("keydown", keyDown);
@@ -80,6 +81,8 @@ function tick(timestamp) {
 
 // Create the game view
 function createView() {
+	const gamefield = document.getElementById("gamefield");
+
 	const background = document.getElementById("background");
 	// Create the grid
 	for (let row = 0; row < GRID_ROWS; row++) {
@@ -89,9 +92,46 @@ function createView() {
 			background.appendChild(tile);
 		}
 	}
-	background.style.setProperty("--GRID_COLS", GRID_COLS);
-	background.style.setProperty("--GRID_ROWS", GRID_ROWS);
-	background.style.setProperty("--TILE_SIZE", TILE_SIZE + "px");
+	gamefield.style.setProperty("--GRID_COLS", GRID_COLS);
+	gamefield.style.setProperty("--GRID_ROWS", GRID_ROWS);
+	gamefield.style.setProperty("--TILE_SIZE", TILE_SIZE + "px");
+
+	// Add items
+	const itemLayer = document.getElementById("items");
+	items.forEach((item) => {
+		item.icon = "images/items/";
+		switch (item.itemType) {
+			case "gold":
+				item.icon += "gold.png";
+				break;
+			case "chest_closed":
+				item.icon += "chest_closed.png";
+				break;
+			case "chest_open":
+				item.icon += "chest_open.png";
+				break;
+		}
+		const visualItem = document.createElement("div");
+		visualItem.classList.add("item");
+		visualItem.style.translate = `${item.col * TILE_SIZE}px ${
+			item.row * TILE_SIZE
+		}px`;
+		visualItem.style.backgroundImage = `url(${item.icon})`;
+		itemLayer.appendChild(visualItem);
+	});
+
+	// Add NPCs
+	const characterLayer = document.getElementById("characters");
+	NPCs.forEach((npc) => {
+		npc.icon = `images/Characters/${npc.npcid}.png`;
+		const visualNPC = document.createElement("div");
+		visualNPC.classList.add("npc");
+		visualNPC.style.translate = `${npc.col * TILE_SIZE}px ${
+			npc.row * TILE_SIZE
+		}px`;
+		visualNPC.style.backgroundImage = `url(${npc.icon})`;
+		characterLayer.appendChild(visualNPC);
+	});
 }
 
 // Display the tiles on the grid
@@ -158,6 +198,38 @@ function displayPlayerAnimation() {
 //#endregion
 
 //#region MODEL
+let tiles = [];
+let items = [];
+let NPCs = [];
+
+async function initModel() {
+	const data = await fetch("level.json").then((response) => response.json());
+	tiles = data.tiles;
+	GRID_COLS = tiles[0].length;
+	GRID_ROWS = tiles.length;
+	data.items.forEach((item) => items.push(new Item(item)));
+	data.npcs.forEach((npc) => NPCs.push(new NPC(npc)));
+}
+
+class Item {
+	constructor({ id, col, row, itemType }) {
+		this.id = id;
+		this.col = col;
+		this.row = row;
+		this.itemType = itemType;
+		this.icon = "";
+	}
+}
+
+class NPC {
+	constructor({ npcid, col, row, type }) {
+		this.npcid = npcid;
+		this.col = col;
+		this.row = row;
+		this.type = type;
+		this.icon = "";
+	}
+}
 
 // Player object
 const player = {
@@ -187,28 +259,9 @@ const player = {
 7: lava
 8: wall
 */
-const tiles = [
-	[0, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 8, 0, 1, 1, 0, 0, 0],
-	[2, 2, 0, 2, 2, 2, 8, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 1, 0, 0, 0],
-	[2, 2, 4, 2, 2, 2, 8, 0, 0, 0, 0, 0, 0, 0, 8, 3, 3, 5, 3, 3, 3],
-	[0, 0, 1, 0, 0, 0, 8, 8, 8, 8, 0, 8, 8, 8, 8, 3, 3, 5, 3, 3, 3],
-	[0, 0, 1, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-	[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-	[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 7, 7, 7, 7, 7, 7, 7, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 7, 7, 7, 7, 7, 7, 7, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 7, 7, 6, 6, 6, 6, 6, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
 
-const GRID_COLS = tiles[0].length;
-const GRID_ROWS = tiles.length;
+let GRID_COLS = 0;
+let GRID_ROWS = 0;
 const TILE_SIZE = 32;
 
 // Get the tile type at a given coordinate
